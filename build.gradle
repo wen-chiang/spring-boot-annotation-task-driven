@@ -1,0 +1,15 @@
+ext {
+    springBootVersion = '3.2.5'
+    dependencyManagementVersion = '1.1.4'
+    lombokVersion = '1.18.32'
+}
+
+subprojects {
+    group = 'com.example.dashboard'
+    version = '0.0.1-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+}
+

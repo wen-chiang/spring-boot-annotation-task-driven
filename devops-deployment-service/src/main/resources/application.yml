@@ -1,0 +1,386 @@
+lma:
+  logging:
+    overrideDefaultLoggerList:
+      - name=org.apache.kafka,loggingLevel=ERROR
+      - name=com.sample,loggingLevel=DEBUG
+
+spring:
+  mvc:
+    throwExceptionIfNoHandlerFound: true
+  jmx:
+    enabled: true
+
+management:
+  security:
+    enabled: false
+  endpoint:
+    build:
+      enabled: true
+    live:
+      enabled: true
+    ready:
+      enabled: true
+    info:
+      enabled: true
+    health:
+      enabled: true
+    secret:
+      enabled: true
+    external:
+      enabled: true
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: 'build,live,ready,info,health,secret,external'
+
+common:
+  routine:
+    artifactory:
+      root: "https://artifactory.sample.com"
+    quay:
+      url: "https://quay.sample.com"
+    checkmarx:
+      url:  "https://sample-security-scan-service.devops.sample.com"
+    fortify:
+      url:  "http://aspnetsrv.rails.rwy.sample.com/FortifyRestAPI/api/SecurityIssue"
+      vulnerability:
+        url:  "http://aspnetsrv.rails.rwy.sample.com/FortifyRestApi/api/SecurityIssue"
+    remedy:
+      url:  "https://remedyts.sample.com/arsys/services/ARService?server=TELPROD&webService=SAMPLE_CHG_MKS_GetEntry_V01"
+    servicenow:
+      url:  "https://services.sample.com/EDP2ServiceNow"
+      mock:
+        url: "http://devops-mock-service.devops.sample.com"
+
+daas:
+  key:
+    non-prod:
+      alias: "e80d48fd-877e-48ca-8fa1-00958ad09213"
+      password: "45cf3a8a-9c96-4dce-a784-fae3244d9df7"
+    prod:
+      alias: "abad0bea-e84b-4592-8f7a-df70ef2e2541"
+      password: "c2b667d8-4451-48e0-8d65-f8ef833abf14"
+  auth:
+    username: "secret.auth.username"
+    password: "secret.auth.password"
+
+
+policy:
+  routine:
+    skip:
+      OpenshiftSmartTSCodePublisherRoutine: true
+      OpenshiftSmartTSMsgPreCheckRoutine: true
+      AnsibleSmartTSCodePublisherRoutine: true
+      AnsibleSmartTSMsgPreCheckRoutine: true
+      ChefSmartTSCodePublisherRoutine: true
+      ChefSmartTSMsgPreCheckRoutine: true
+
+artifactory:
+  protocol: https
+  host: artifactory.sample.com
+  port: 443
+
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: default
+  logging:
+    level:
+      org.springframework.web: DEBUG
+      org.springframework.beans: DEBUG
+      org.hibernate: DEBUG
+
+procedure:
+  chef:
+    chefApi:
+      url:
+        root: "http://localhost:8080/"
+  ansible:
+    ansibleApi:
+      url:
+        root: "http://localhost:8080/"
+common:
+  routine:
+    servicenow:
+      url:  "http://devops-mock-service.devops.sample.com"
+      mock:
+        url: "http://devops-mock-service.devops.sample.com"
+    remedy:
+      url:  "http://devops-mock-service.devops.sample.com/arsys/services/ARService?server=TELPROD&webService=SAMPLE_CHG_MKS_GetEntry_V01"
+
+server:
+  port: 3320
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: ci
+  logging:
+    level:
+      org.springframework.web: DEBUG
+      org.hibernate: DEBUG
+
+security:
+  require-ssl: true
+
+server:
+  ssl:
+    enabled: true
+    key-store: "${user.dir}/../secrets/daas-nonprod.p12"
+    key-store-password: "DevOps"
+    trust-store: "${user.dir}/../secrets/daas-nonprod.p12"
+    trust-store-password: "DevOps"
+    key-password: "${daas.key.non-prod.password}"
+    key-alias: "${daas.key.non-prod.alias}"
+
+daas:
+  ssl:
+    enabled: true
+    key-store: "${user.dir}/../secrets/daas-nonprod.p12"
+    key-store-password: "DevOps"
+    trust-store: "${user.dir}/../secrets/daas-nonprod.p12"
+    trust-store-password: "DevOps"
+    key-password: "${daas.key.non-prod.password}"
+    key-alias: "${daas.key.non-prod.alias}"
+
+procedure:
+  chef:
+    chefApi:
+      url:
+        root: "https://sample-chef-api-dev.devops-nonprod.sample.com/"
+  ansible:
+    ansibleApi:
+      url:
+        root: "https://tower.sample.com/api/v2"
+common:
+  routine:
+    checkmarx:
+      url:  "https://sample-security-scan-service-dev.devops-nonprod.sample.com"
+    remedy:
+      url:  "http://devops-mock-service.devops.sample.com/arsys/services/ARService?server=TELPROD&webService=SAMPLE_CHG_MKS_GetEntry_V01"
+    servicenow:
+      url:  "https://services.sample.com/EDP2ServiceNow"
+      mock:
+        url: "http://devops-mock-service.devops.sample.com"
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  logging:
+    level:
+      org.springframework.web: DEBUG
+      org.hibernate: DEBUG
+
+security:
+  require-ssl: true
+
+server:
+  ssl:
+    enabled: true
+    key-store: "${user.dir}/../secrets/daas-nonprod.p12"
+    key-store-password: "DevOps"
+    trust-store: "${user.dir}/../secrets/daas-nonprod.p12"
+    trust-store-password: "DevOps"
+    key-password: "${daas.key.non-prod.password}"
+    key-alias: "${daas.key.non-prod.alias}"
+
+daas:
+  ssl:
+    enabled: true
+    key-store: "${user.dir}/../secrets/daas-nonprod.p12"
+    key-store-password: "DevOps"
+    trust-store: "${user.dir}/../secrets/daas-nonprod.p12"
+    trust-store-password: "DevOps"
+    key-password: "${daas.key.non-prod.password}"
+    key-alias: "${daas.key.non-prod.alias}"
+
+procedure:
+  chef:
+    chefApi:
+      url:
+        root: "https://sample-chef-api-test.devops-nonprod.sample.com/"
+  ansible:
+    ansibleApi:
+      url:
+        root: "https://tower.sample.com/api/v2"
+policy:
+  routine:
+    skip:
+      OpenshiftRemedyRoutine: false
+      OpenshiftRemedyArtifactoryRoutine: false
+
+common:
+  routine:
+    checkmarx:
+      url:  "https://sample-security-scan-service-dev.devops-nonprod.sample.com"
+    remedy:
+      url:  "http://devops-mock-service.devops.sample.com/arsys/services/ARService?server=TELPROD&webService=SAMPLE_CHG_MKS_GetEntry_V01"
+    servicenow:
+      url:  "https://services.sample.com/EDP2ServiceNow"
+      mock:
+        url: "http://devops-mock-service.devops.sample.com"
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: trial
+  logging:
+    level:
+      org.springframework.web: DEBUG
+      org.hibernate: DEBUG
+
+security:
+  require-ssl: true
+
+server:
+  ssl:
+    enabled: true
+    key-store: "${user.dir}/../secrets/daas-nonprod.p12"
+    key-store-password: "DevOps"
+    trust-store: "${user.dir}/../secrets/daas-nonprod.p12"
+    trust-store-password: "DevOps"
+    key-password: "${daas.key.non-prod.password}"
+    key-alias: "${daas.key.non-prod.alias}"
+
+daas:
+  ssl:
+    enabled: true
+    key-store: "${user.dir}/../secrets/daas-nonprod.p12"
+    key-store-password: "DevOps"
+    trust-store: "${user.dir}/../secrets/daas-nonprod.p12"
+    trust-store-password: "DevOps"
+    key-password: "${daas.key.non-prod.password}"
+    key-alias: "${daas.key.non-prod.alias}"
+
+procedure:
+  chef:
+    chefApi:
+      url:
+        root: "https://sample-chef-api-test.devops-nonprod.sample.com/"
+  ansible:
+    ansibleApi:
+      url:
+        root: "https://tower.sample.com/api/v2"
+common:
+  routine:
+    checkmarx:
+      url:  "https://sample-security-scan-service-trial.devops-nonprod.sample.com"
+    servicenow:
+      url: "https://services.sample.com/EDP2ServiceNow"
+      mock:
+        url: "http://devops-mock-service.devops.sample.com"
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: uat
+  logging:
+    level:
+      org.springframework.web: DEBUG
+      org.hibernate: DEBUG
+
+security:
+  require-ssl: true
+
+server:
+  ssl:
+    enabled: true
+    key-store: "${user.dir}/../secrets/daas-nonprod.p12"
+    key-store-password: "DevOps"
+    trust-store: "${user.dir}/../secrets/daas-nonprod.p12"
+    trust-store-password: "DevOps"
+    key-password: "${daas.key.non-prod.password}"
+    key-alias: "${daas.key.non-prod.alias}"
+
+daas:
+  ssl:
+    enabled: true
+    key-store: "${user.dir}/../secrets/daas-nonprod.p12"
+    key-store-password: "DevOps"
+    trust-store: "${user.dir}/../secrets/daas-nonprod.p12"
+    trust-store-password: "DevOps"
+    key-password: "${daas.key.non-prod.password}"
+    key-alias: "${daas.key.non-prod.alias}"
+
+procedure:
+  chef:
+    chefApi:
+      url:
+        root: "https://sample-chef-api.devops.sample.com/"
+  ansible:
+    ansibleApi:
+      url:
+        root: "https://tower.sample.com/api/v2"
+common:
+  routine:
+    checkmarx:
+      url:  "https://sample-security-scan-service.devops.sample.com"
+    servicenow:
+      url:  "https://services-dev.sample.com/EDP2ServiceNow"
+      mock:
+        url: "http://devops-mock-service.devops.sample.com"
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+  logging:
+    level:
+      org.springframework.web: DEBUG
+      org.hibernate: DEBUG
+
+security:
+  require-ssl: true
+
+server:
+  ssl:
+    enabled: true
+    key-store: "${user.dir}/../secrets/daas-prod.p12"
+    key-store-password: "DevOps"
+    trust-store: "${user.dir}/../secrets/daas-prod.p12"
+    trust-store-password: "DevOps"
+    key-password: "${daas.key.prod.password}"
+    key-alias: "${daas.key.prod.alias}"
+
+daas:
+  ssl:
+    enabled: true
+    key-store: "${user.dir}/../secrets/daas-prod.p12"
+    key-store-password: "DevOps"
+    trust-store: "${user.dir}/../secrets/daas-prod.p12"
+    trust-store-password: "DevOps"
+    key-password: "${daas.key.prod.password}"
+    key-alias: "${daas.key.prod.alias}"
+
+procedure:
+  chef:
+    chefApi:
+      url:
+        root: "https://sample-chef-api.devops.sample.com/"
+  ansible:
+    ansibleApi:
+      url:
+        root: "https://tower.sample.com/api/v2"
+common:
+  routine:
+    checkmarx:
+      url:  "https://sample-security-scan-service.devops.sample.com"
+    servicenow:
+      url: "https://services.sample.com/EDP2ServiceNow"
+      mock:
+        url: "https://services.sample.com/EDP2ServiceNow"

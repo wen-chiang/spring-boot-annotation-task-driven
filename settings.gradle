@@ -1,0 +1,3 @@
+rootProject.name = 'spring-boot-annotation-task-driven'
+include 'devops-deployment-base'
+include 'devops-deployment-service'

@@ -1,0 +1,20 @@
+debug:
+  true
+
+management:
+  security:
+    enabled: false
+  endpoint:
+    build:
+      enabled: true
+    live:
+      enabled: true
+    ready:
+      enabled: true
+    info:
+      enabled: true
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: 'build,live,ready,info'
